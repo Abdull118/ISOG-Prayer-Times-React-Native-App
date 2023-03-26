@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "ISoG-Prayer-Times",
+    "slug": "snack-9891716d-a49d-4111-9965-17b670ecbd7b",
+    "version": "1.0.1",
+    "orientation": "landscape",
+    "icon": "./assets/isog2.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "intentFilters": [
+        {
+          "action": "MAIN",
+          "data": {},
+          "category": [
+            "LEANBACK_LAUNCHER",
+            "LAUNCHER"
+          ]
+        }
+      ],
+      "package": "com.abdull118.snack9891716da49d4111996517b670ecbd7b"
+    }
+  },
+  "web": {
+    "favicon": "./assets/favicon.png"
+  },
+  "extra": {
+    "eas": {
+      "projectId": "95d5f991-468c-4e19-9533-fc788b6fa069"
+    }
+  }
+}

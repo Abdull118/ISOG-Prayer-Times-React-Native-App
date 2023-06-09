@@ -8,7 +8,7 @@ import { useKeepAwake } from 'expo-keep-awake';
 import AnalogClock from 'react-native-clock-analog';
 import { LinearGradient } from "expo-linear-gradient";
 import moment from 'moment/moment';
-import { TVEventHandler, useTVEventHandler } from 'react-native';
+// import { TVEventHandler, useTVEventHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -42,21 +42,21 @@ export default Home = ({navigation, route}) => {
 
 
 
-  //For TVEventHandler
-  const [lastEventType, setLastEventType] = useState('');
+  // //For TVEventHandler
+  // const [lastEventType, setLastEventType] = useState('');
 
 
-  const myTVEventHandler = evt => {
-    setLastEventType(evt.eventType);
-    console.log(evt.eventType)
+  // const myTVEventHandler = evt => {
+  //   setLastEventType(evt.eventType);
+  //   console.log(evt.eventType)
 
-    if(evt.eventType === "back"){
-      setIsModalVisible(false)
-    }
+  //   if(evt.eventType === "back"){
+  //     setIsModalVisible(false)
+  //   }
     
-  };
+  // };
 
-  useTVEventHandler(myTVEventHandler);
+  // useTVEventHandler(myTVEventHandler);
 
 
   const getHijriDate = async () => {
@@ -155,12 +155,6 @@ const momentGetDate = () =>{
   setMomentDate(moment().format('dddd MMMM D YYYY'))
 }
 
-let fajr = moment(fajrAthan +':00 PM', 'HH:mm:ss a')
-let dhuhr =  moment(dhurAthan +':00 PM', 'HH:mm:ss a')
-let asr = moment(asrAthan +':00 PM', 'HH:mm:ss a')
-let maghrib = moment(changeableMaghribAthan + ':00 PM', 'HH:mm:ss a')
-let isha = moment(ishaAthan +':00 PM', 'HH:mm:ss a')
-let currentTime = moment()
 
 const [getFajrHrValue, setGetFajrHrValue] = useState()
 const [getFajrMinValues, setGetFajrMinValues] = useState()
@@ -208,77 +202,11 @@ var b = moment('2023-03-22T19:35:00');
     }, 3600000) 
  }, []);
 
- useEffect(()=>{
-  const countDown = setInterval(() => {
-
-    if(moment().isBefore(fajr)){
-      var duration = moment.duration(fajr.diff(moment(currentTime, 'HH:mm:ss a')))
-      var hours = parseInt(duration.asHours());
-      var minutes = parseInt(duration.asMinutes()) % 60;
-      var seconds = parseInt(duration.asSeconds()) % 60;
-      var difference = '-' + hours + ':' + minutes + ':' + seconds
-      setCountDownTimer(difference)
-      setUntil('الفجر')
-  }
-  if(moment().isBefore(dhuhr) && moment().isAfter(fajr)){
-      var duration =  moment.duration(dhuhr.diff(moment(currentTime, 'HH:mm:ss a')))
-      var hours = parseInt(duration.asHours());
-      var minutes = parseInt(duration.asMinutes()) % 60;
-      var seconds = parseInt(duration.asSeconds()) % 60;
-      var difference = '-' + hours + ':' + minutes + ':' + seconds
-      setCountDownTimer(difference)
-      setUntil('الظهر')
-  }else if(moment().isBefore(asr) && moment().isAfter(dhuhr)){
-    var duration = moment.duration(asr.diff(moment(currentTime, 'HH:mm:ss a')))
-      var hours = parseInt(duration.asHours());
-      var minutes = parseInt(duration.asMinutes()) % 60;
-      var seconds = parseInt(duration.asSeconds()) % 60;
-      setCountDownTimer(difference = '-' + hours + ':' + minutes + ':' + seconds)
-      setUntil('العصر')
-  }else if(moment().isBefore(maghrib) && moment().isAfter(asr)){
-    var duration = moment.duration(maghrib.diff(moment(currentTime, 'HH:mm:ss a')))
-    var hours = parseInt(duration.asHours());
-    var minutes = parseInt(duration.asMinutes()) % 60;
-    var seconds = parseInt(duration.asSeconds()) % 60;
-    var difference = '-' + hours + ':' + minutes + ':' + seconds
-    setCountDownTimer(difference)
-    setUntil('المغرب')
-}else if(moment().isBefore(isha) && moment().isAfter(maghrib)){
-  var duration = moment.duration(isha.diff(moment(currentTime, 'HH:mm:ss a')))
-  var hours = parseInt(duration.asHours());
-  var minutes = parseInt(duration.asMinutes()) % 60;
-  var seconds = parseInt(duration.asSeconds()) % 60;
-  var difference = '-' + hours + ':' + minutes + ':' + seconds
-  setCountDownTimer(difference)
-  setUntil('العشاء')
-}else if(moment().isAfter(isha)){
-  setCountDownTimer('')
-  setUntil('')
-}
-  }, 1000)
-return () =>{
-  clearInterval(countDown)
-}
- }, [countDownTimer])
-
-const [ramadan, setRamadan] = useState('')
-
- useEffect(()=>{
-  const ramadanCountDown = setInterval(() => {
-
-      var duration = moment.duration(b.diff(a));
-      var days = parseInt(duration.asDays())
-      var hours = parseInt(duration.asHours()) %24;
-      var minutes = parseInt(duration.asMinutes()) % 60;
-      var seconds = parseInt(duration.asSeconds()) % 60;
-      var difference = days + ':' + hours  + ':' + minutes + ':' + seconds + '-'
-      setRamadan(difference)
-  
-  }, 1000)
-return () =>{
-  clearInterval(ramadanCountDown)
-}
- }, [ramadan])
+ useEffect(() => {
+    getValueLocally()
+   
+ }, []);
+ 
 
  useEffect(() => {
     getValueLocally()
@@ -315,9 +243,7 @@ return () =>{
       <Text style={{backgroundColor: 'rgb(0, 78, 192)', borderBottomLeftRadius: 5, borderTopLeftRadius: 5, color: 'white', width: 120, paddingLeft: 5}}>Today's Weather:</Text>
       <Text style={{backgroundColor: 'white', borderBottomRightRadius: 5, borderTopRightRadius: 5}}> {weatherText} {weatherValue}°C </Text></View>
       
-      <View style={{zIndex:5, opacity:1, paddingLeft: 5, color: 'yellow', position: 'absolute', top: 200, left: 325, fontSize: 19, flexDirection: 'column'}}>
-      <Text style={{backgroundColor: 'transparent', borderBottomLeftRadius: 5, borderTopLeftRadius: 5, color: 'yellow', width: 70, paddingLeft: 5, marginBottom: 40, textAlign: 'center', fontSize: 26}}>{until}</Text>
-      <Text style={{backgroundColor: 'transparent', fontWeight: 'bold', borderBottomRightRadius: 5, borderTopRightRadius: 5, color: 'yellow', marginLeft:5 }}> {countDownTimer} </Text></View>
+      
 
 
 <View style={{position:'absolute',
@@ -502,17 +428,6 @@ return () =>{
              </LinearGradient>
 
              <LinearGradient colors={['rgb(0, 78, 192)', '#000000']} style={{zIndex:1, opacity:1, backgroundColor: 'rgb(0, 78, 192)', color: 'white',position: 'absolute', bottom:22, width: 250, textAlign: 'center', borderRadius:100, right: 280, }}>
-               {/* <TextTicker 
-                  duration={60000}
-                  loop
-                  repeatSpacer={30}
-                  marqueeDelay={1000}
-                  style={{color: 'white', zIndex: 1, fontSize: 22, fontFamily: 'Sansita-Regular', paddingBottom:0, textAlign: 'center', }}>
-                    Join our Weekend Islamic School from 9AM - 1PM         Remember to Donate to the Masjid!!         Turn off your Phone while in the Masjid         Join our Weekend Islamic School from 9AM - 1PM         Remember to Donate to the Masjid!!         Turn off your Phone while in the Masjid         
-                   </TextTicker>  */}
-                   
-
-<Text style={{color:'yellow', textAlign:'center', fontWeight: 'bold', fontSize:20}}><Text style={{color:'yellow', textAlign:'center', fontSize: 20}}>رَمَضَان:</Text>   {ramadan}</Text>
 
                   
                    </LinearGradient>

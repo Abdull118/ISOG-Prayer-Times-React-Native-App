@@ -32,6 +32,11 @@
         }
       ],
       "package": "com.abdull118.snack9891716da49d4111996517b670ecbd7b"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "95d5f991-468c-4e19-9533-fc788b6fa069"
+      }
     }
   },
   "web": {

@@ -26,8 +26,15 @@ export default Home = ({navigation, route}) => {
   const [dhurAthan, setDhurAthan] = useState()
   const [asrAthan, setAsrAthan] = useState()
   const [maghribAthan, setMaghribAthan] = useState()
-  const [changeableMaghribAthan, setChangeableMaghribAthan] = useState()
   const [ishaAthan, setIshaAthan] = useState()
+
+  const [fajrPrayer ,setFajrPrayer] = useState()
+  const [dhurPrayer, setDhurPrayer] = useState()
+  const [asrPrayer, setAsrPrayer] = useState()
+  const [maghribPrayer, setMaghribPrayer] = useState()
+  const [ishaPrayer, setIshaPrayer] = useState()
+
+
   const [shuruq, setShuruq] = useState()
   const [currentDate, setCurrentDate] = useState()
   const [currentCustomDate, setCurrentCustomDate] = useState()
@@ -92,7 +99,6 @@ export default Home = ({navigation, route}) => {
       setDhurAthan(convertTo12Hour(json.data.timings.Dhuhr))
       setAsrAthan(convertTo12Hour(json.data.timings.Asr))
       setMaghribAthan(convertTo12Hour(json.data.timings.Maghrib))
-      setChangeableMaghribAthan(json.data.timings.Maghrib)
       setIshaAthan(convertTo12Hour(json.data.timings.Isha))
       convertTo12Hour2(json.data.timings.Sunrise)
     } catch (error) {
@@ -100,25 +106,47 @@ export default Home = ({navigation, route}) => {
     }
   }
 
+  const getPrayerTimes = async () =>{
+    try{
+      const response = await fetch(`https://sparkling-jade-cowboy-boots.cyclic.app/prayers`);
+      const json = await response.json()
+      setFajrPrayer(json.fajr)
+      setDhurPrayer(json.dhuhr)
+      setAsrPrayer(json.asr)
+      setMaghribPrayer(json.maghrib)
+      setIshaPrayer(json.isha)
+      console.log(json)
+    }catch(e){
+      console.log(e)
+    }
+  }
+
   function convertTo12Hour(oldFormatTime) {
     console.log("oldFormatTime: " + oldFormatTime);
     var oldFormatTimeArray = oldFormatTime.split(":");
-
+  
     var HH = parseInt(oldFormatTimeArray[0]);
     var min = oldFormatTimeArray[1];
-
+  
     var AMPM = HH >= 12 ? "PM" : "AM";
     var hours;
-    if(HH == 0){
-      hours = HH + 12;
-    } else if (HH > 12) {
+    if (HH === 0) {
+      hours = "00";
+    } else if (HH < 10 && HH > 0) {
+      hours = "0" + HH;
+    } else if (HH >= 12 && HH < 22) {
+      hours = "0" + (HH - 12);
+    } else if (HH >= 22) {
       hours = HH - 12;
     } else {
       hours = HH;
     }
+  
     var newFormatTime = hours + ":" + min + " " + AMPM;
-    return newFormatTime
+    return newFormatTime;
   }
+  
+  
 
   function convertTo12Hour2(oldFormatTime) {
     
@@ -156,28 +184,28 @@ const momentGetDate = () =>{
 }
 
 
-const [getFajrHrValue, setGetFajrHrValue] = useState()
-const [getFajrMinValues, setGetFajrMinValues] = useState()
-const [getDhuhrHrValue, setGetDhuhrHrValue] = useState()
-const [getDhuhrMinValues, setGetDhuhrMinValues] = useState()
-const [getAsrHrValue, setGetAsrHrValue] = useState()
-const [getAsrMinValues, setGetAsrMinValues] = useState()
-const [getMaghribHrValue, setGetMaghribHrValue] = useState()
-const [getMagrhibMinValues, setGetMagrhibMinValues] = useState()
-const [getIshaMinValues, setGetIshaMinValues] = useState()
-const [getIshaHrValues, setGetIshaHrValues] = useState()  
-getValueLocally=()=>{
-    AsyncStorage.getItem('Key_1').then((value) => setGetFajrHrValue(value));
-    AsyncStorage.getItem('Key_2').then((value) => setGetFajrMinValues(value));
-    AsyncStorage.getItem('Key_3').then((value) => setGetDhuhrHrValue(value));
-    AsyncStorage.getItem('Key_4').then((value) => setGetDhuhrMinValues(value));
-    AsyncStorage.getItem('Key_5').then((value) => setGetAsrHrValue(value));
-    AsyncStorage.getItem('Key_6').then((value) => setGetAsrMinValues(value));
-    AsyncStorage.getItem('Key_7').then((value) => setGetMaghribHrValue(value));
-    AsyncStorage.getItem('Key_8').then((value) => setGetMagrhibMinValues(value));
-    AsyncStorage.getItem('Key_9').then((value) => setGetIshaHrValues(value));
-    AsyncStorage.getItem('Key_10').then((value) => setGetIshaMinValues(value));
-  }
+// const [getFajrHrValue, setGetFajrHrValue] = useState()
+// const [getFajrMinValues, setGetFajrMinValues] = useState()
+// const [getDhuhrHrValue, setGetDhuhrHrValue] = useState()
+// const [getDhuhrMinValues, setGetDhuhrMinValues] = useState()
+// const [getAsrHrValue, setGetAsrHrValue] = useState()
+// const [getAsrMinValues, setGetAsrMinValues] = useState()
+// const [getMaghribHrValue, setGetMaghribHrValue] = useState()
+// const [getMagrhibMinValues, setGetMagrhibMinValues] = useState()
+// const [getIshaMinValues, setGetIshaMinValues] = useState()
+// const [getIshaHrValues, setGetIshaHrValues] = useState()  
+// getValueLocally=()=>{
+//     AsyncStorage.getItem('Key_1').then((value) => setGetFajrHrValue(value));
+//     AsyncStorage.getItem('Key_2').then((value) => setGetFajrMinValues(value));
+//     AsyncStorage.getItem('Key_3').then((value) => setGetDhuhrHrValue(value));
+//     AsyncStorage.getItem('Key_4').then((value) => setGetDhuhrMinValues(value));
+//     AsyncStorage.getItem('Key_5').then((value) => setGetAsrHrValue(value));
+//     AsyncStorage.getItem('Key_6').then((value) => setGetAsrMinValues(value));
+//     AsyncStorage.getItem('Key_7').then((value) => setGetMaghribHrValue(value));
+//     AsyncStorage.getItem('Key_8').then((value) => setGetMagrhibMinValues(value));
+//     AsyncStorage.getItem('Key_9').then((value) => setGetIshaHrValues(value));
+//     AsyncStorage.getItem('Key_10').then((value) => setGetIshaMinValues(value));
+//   }
 
 var a = moment();//now
 var b = moment('2023-03-22T19:35:00');
@@ -203,17 +231,14 @@ var b = moment('2023-03-22T19:35:00');
  }, []);
 
  useEffect(() => {
-    getValueLocally()
-   
- }, []);
- 
+     
+    getPrayerTimes()
 
- useEffect(() => {
-    getValueLocally()
-   
+    setInterval(()=>{
+      getPrayerTimes()
+    }, 3600000) 
  }, []);
 
- //Goodluck to anyone who tries to work on this project lol.
     return (
     
     <View style={{ height: 'auto', width: 'auto', fontFamily: 'Sanista', flex:1 }} >
@@ -301,7 +326,7 @@ var b = moment('2023-03-22T19:35:00');
 
       <View>
         <Text style= {styles.prayer}>الفجر</Text>
-        <Text style= {styles.prayer2}>{getFajrHrValue}:{getFajrMinValues} AM</Text>
+        <Text style= {styles.prayer2}>{fajrPrayer} AM</Text>
     </View>
   </View>
 
@@ -312,14 +337,7 @@ var b = moment('2023-03-22T19:35:00');
 </View>
 <View >
       <Text style= {styles.prayer}>الظهر</Text>
-      <Text style={{ color: 'yellow', 
-    textAlign: 'center', 
-    paddingLeft: 10,
-    fontSize: 25, 
-    fontFamily: 'Sansita-Regular',
-    fontWeight: 'bold', 
-    zIndex:1, 
-    opacity:1,}}>{getDhuhrHrValue}:{getDhuhrMinValues} PM</Text>
+      <Text style={styles.prayer2}>{dhurPrayer} PM</Text>
 </View>
 </View>
 
@@ -331,7 +349,7 @@ var b = moment('2023-03-22T19:35:00');
 
   <View >
       <Text style= {styles.prayer}>العصر</Text>
-      <Text style= {styles.prayer2}>{getAsrHrValue}:{getAsrMinValues} PM</Text>
+      <Text style= {styles.prayer2}>{asrPrayer} PM</Text>
 </View>
 </View>
 
@@ -344,7 +362,7 @@ var b = moment('2023-03-22T19:35:00');
 
   <View>
       <Text style= {styles.prayer}>المغرب</Text>
-      <Text style= {styles.prayer2}>{maghribAthan}</Text>
+      <Text style= {styles.prayer2}>{maghribPrayer} PM</Text>
 </View>
 </View>
 
@@ -355,7 +373,7 @@ var b = moment('2023-03-22T19:35:00');
       </View>
       <View >
       <Text style= {styles.prayer}>العشاء</Text>
-      <Text style= {styles.prayer2}>{getIshaHrValues}:{getIshaMinValues} PM</Text>
+      <Text style= {styles.prayer2}>{ishaPrayer} PM</Text>
       
 </View></View>
             
@@ -523,7 +541,8 @@ image: {
   prayer2:{
     color: 'yellow', 
     textAlign: 'center', 
-    paddingLeft: 25,
+    position: 'relative',
+    left: 15,
     fontSize: 25, 
     fontFamily: 'Sansita-Regular',
     fontWeight: 'bold', 

@@ -415,23 +415,7 @@ var b = moment('2023-03-22T19:35:00');
       <Text style={{textAlign:'center', color: 'white', fontSize: 19}}>إفطار</Text>
       <Text style={{color: 'white', fontSize: 19}}>{maghribAthan}</Text>
 </LinearGradient>
-
-
-
-    
-    <LinearGradient colors={['rgb(0, 78, 192)', '#000000']} style={{zIndex:1, opacity:1, backgroundColor: 'black', position: 'absolute', right: 0, top: 126, width: 150, display: 'flex', flexDirection: 'column', border: 1, borderRadius:100, padding: 5}}>
-      
-              <Text style={{color: 'white', zIndex: 1, fontSize: 19, fontFamily: 'Sansita-Regular', paddingBottom:0, textAlign: 'center', }}>
-                    Islamic School  
-                   </Text> 
-                   <Text style={{color: 'white', zIndex: 1, fontSize: 15, fontFamily: 'Sansita-Regular', paddingBottom:0, textAlign: 'center', }}>
-                    Saturday's
-                   </Text> 
-                   <Text style={{color: 'white', zIndex: 1, fontSize: 15, fontFamily: 'Sansita-Regular', paddingBottom:0, textAlign: 'center', }}>
-                    9AM - 1PM  
-                   </Text> 
-                  
-                   </LinearGradient>    
+ 
            
         <LinearGradient colors={['rgb(0, 78, 192)', '#000000']}  style={{zIndex:1, opacity:1, backgroundColor: 'black', position: 'absolute', right: 0, bottom: 150, width: 140, display: 'flex', flexDirection: 'column', border: 1, borderRadius:100}}>
         

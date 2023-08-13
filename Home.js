@@ -362,7 +362,7 @@ var b = moment('2023-03-22T19:35:00');
 
   <View>
       <Text style= {styles.prayer}>المغرب</Text>
-      <Text style= {styles.prayer2}>{maghribPrayer} PM</Text>
+      <Text style= {styles.prayer2}>{maghribAthan}</Text>
 </View>
 </View>
 

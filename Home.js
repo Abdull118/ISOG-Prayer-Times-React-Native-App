@@ -210,6 +210,18 @@ const momentGetDate = () =>{
 var a = moment();//now
 var b = moment('2023-03-22T19:35:00');
 
+const [announcements, setAnnouncements] = useState('')
+
+const getAnnouncements = async () =>{
+  try{
+    const response = await fetch(`https://sparkling-jade-cowboy-boots.cyclic.app/announcements`)
+    const data = await response.json()
+    setAnnouncements(data.annoucements)
+  }catch(e){
+
+  }
+}
+
 
   useEffect(() => {
       getDate()
@@ -233,8 +245,10 @@ var b = moment('2023-03-22T19:35:00');
  useEffect(() => {
      
     getPrayerTimes()
+    getAnnouncements()
 
     setInterval(()=>{
+      getAnnouncements()
       getPrayerTimes()
     }, 3600000) 
  }, []);
@@ -264,10 +278,12 @@ var b = moment('2023-03-22T19:35:00');
     <Text style={styles.customDate}>{momentDate} /({currentHijriYear} Hijri) {currentHijriDay} {currentHijriMonth} </Text>
     </LinearGradient>
 
-    <View style={{zIndex:2, opacity:1, paddingLeft: 5, color: 'white', position: 'absolute', bottom: 26, right: 10, fontSize: 17, flexDirection: 'row'}}>
-      <Text style={{backgroundColor: 'rgb(0, 78, 192)', borderBottomLeftRadius: 5, borderTopLeftRadius: 5, color: 'white', width: 120, paddingLeft: 5}}>Today's Weather:</Text>
-      <Text style={{backgroundColor: 'white', borderBottomRightRadius: 5, borderTopRightRadius: 5}}> {weatherText} {weatherValue}°C </Text></View>
+    <View style={{zIndex:2, opacity:1, paddingLeft: 5, color: 'white', position: 'absolute', bottom: 5, right: 20, fontSize: 17, flexDirection: 'column'}}>
+      <Text style={{backgroundColor: 'rgb(0, 78, 192)', borderTopRightRadius: 5, borderTopLeftRadius: 5, color: 'white', width: 120, paddingLeft: 5}}>Today's Weather:</Text>
+      <Text style={{backgroundColor: 'white', borderBottomLeftRadius: 5, borderBottomRightRadius: 5}}> {weatherText} {weatherValue}°C </Text>
+    </View>
       
+
       
 
 
@@ -417,12 +433,13 @@ var b = moment('2023-03-22T19:35:00');
 </LinearGradient>
  
            
-        <LinearGradient colors={['rgb(0, 78, 192)', '#000000']}  style={{zIndex:1, opacity:1, backgroundColor: 'black', position: 'absolute', right: 0, bottom: 150, width: 140, display: 'flex', flexDirection: 'column', border: 1, borderRadius:100}}>
+        <LinearGradient colors={['rgb(0, 78, 192)', '#000000']}  style={{zIndex:1, opacity:1, backgroundColor: 'black', position: 'absolute', right: 10, bottom: 50, width: 140, display: 'flex', flexDirection: 'column', border: 1, borderRadius:100}}>
         
           
-        <Text style={{color: 'white', zIndex: 1, fontSize: 19, fontFamily: 'Sansita-Regular', paddingBottom:0, textAlign: 'center', }}>
+            <Text style={{color: 'white', zIndex: 1, fontSize: 19, fontFamily: 'Sansita-Regular', paddingBottom:0, textAlign: 'center', }}>
               Donate
-             </Text> 
+             </Text>
+
              <Text style={{color: 'white', zIndex: 1, fontSize: 15, fontFamily: 'Sansita-Regular', paddingBottom:0, textAlign: 'center', }}>
               for your Masjid!
              </Text> 
@@ -433,6 +450,11 @@ var b = moment('2023-03-22T19:35:00');
 
                   
                    </LinearGradient>
+
+            <View style={styles.announcementsContainer}>
+              <Text style={styles.annoncementsTitle}>Announcements</Text>
+              <Text style={styles.announcement}>{announcements}</Text>
+            </View>
     </View>
 
 
@@ -510,8 +532,8 @@ image: {
       width: 50, 
       height: 'auto', 
       position: 'absolute', 
-      bottom: 30, 
-      right: 10},
+      bottom: 50, 
+      right: 20},
   
   prayer:{
     color: 'yellow', 
@@ -563,6 +585,38 @@ image: {
     width: 80,
     height: 70
   },
+
+  announcementsContainer:{
+    position: 'absolute',
+    bottom: 5,
+    backgroundColor: 'white',
+    display: 'flex',
+    width: '40%',
+    justifyContent: 'center',
+    right: 165,
+ 
+    borderRadius: 15,
+    textAlign: 'center'
+  },
+  annoncementsTitle:{
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    backgroundColor: 'rgb(0, 78, 192)',
+    color: 'white',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    padding: 5
+
+  },
+
+  announcement:{
+    fontSize: 17,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: 5
+
+  }
     
  
 })

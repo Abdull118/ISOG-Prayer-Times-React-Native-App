@@ -278,8 +278,8 @@ const getAnnouncements = async () =>{
     <Text style={styles.customDate}>{momentDate} /({currentHijriYear} Hijri) {currentHijriDay} {currentHijriMonth} </Text>
     </LinearGradient>
 
-    <View style={{zIndex:2, opacity:1, paddingLeft: 5, color: 'white', position: 'absolute', bottom: 5, right: 20, fontSize: 17, flexDirection: 'column'}}>
-      <Text style={{backgroundColor: 'rgb(0, 78, 192)', borderTopRightRadius: 5, borderTopLeftRadius: 5, color: 'white', width: 120, paddingLeft: 5}}>Today's Weather:</Text>
+    <View style={{zIndex:2, opacity:1, paddingLeft: 5, color: 'white', position: 'absolute', bottom: 5, right: 13, fontSize: 17, flexDirection: 'column'}}>
+      <Text style={{backgroundColor: 'rgb(0, 78, 192)', borderTopRightRadius: 5, borderTopLeftRadius: 5, color: 'white', width: 133, paddingLeft: 5, textAlign: 'center'}}>Today's Weather</Text>
       <Text style={{backgroundColor: 'white', borderBottomLeftRadius: 5, borderBottomRightRadius: 5}}> {weatherText} {weatherValue}°C </Text>
     </View>
       
@@ -451,10 +451,12 @@ const getAnnouncements = async () =>{
                   
                    </LinearGradient>
 
-            <View style={styles.announcementsContainer}>
+            {/* <View style={styles.announcementsContainer}>
               <Text style={styles.annoncementsTitle}>Announcements</Text>
               <Text style={styles.announcement}>{announcements}</Text>
             </View>
+*/}
+
     </View>
 
 

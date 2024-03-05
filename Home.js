@@ -134,7 +134,7 @@ const getDate = () => {
 };
 
 const momentGetDate = () =>{
-  setMomentDate(moment().format('dddd MMMM D, YYYY'))
+  setMomentDate(moment().format('ddd MMMM D, YYYY'))
 }
 
 const [announcements, setAnnouncements] = useState('')
@@ -177,13 +177,19 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
       isha: convertTimeToMinutes(ishaAthan, true),
     };
   
-    // Determine the next prayer
-    const nextPrayer = Object.keys(times).reduce((next, prayer) => {
-      if (times[prayer] > currentTime && (next === null || times[prayer] < times[next])) {
-        return prayer;
-      }
-      return next;
-    }, null);
+  // Determine the next prayer
+  let nextPrayer = Object.keys(times).reduce((next, prayer) => {
+    if (times[prayer] > currentTime && (next === null || times[prayer] < times[next])) {
+      return prayer;
+    }
+    return next;
+  }, null);
+
+  // Handle the case when current time is past 'Isha' and before 'Fajr' of next day
+  if (nextPrayer === null) {
+    nextPrayer = 'fajr';
+    currentTime += 1440; // Add 24 hours to current time for comparison
+  }
   
     // Update the upcoming prayer name and countdown time
     if (nextPrayer) {
@@ -355,7 +361,7 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
       
         <View>
           <View style={styles.dateContainer}>
-            <Text style={styles.arabicDate}>{currentHijriMonth} {currentHijriDay} {currentHijriYear}</Text>
+            <Text style={styles.arabicDate}>{currentHijriMonth}-{currentHijriDay}-{currentHijriYear}</Text>
             <Text style={styles.englishDate}>{momentDate}</Text>
             <View style={styles.border}></View>
           </View>
@@ -364,12 +370,17 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
             <Text><DigitalClock /></Text>
           </View>
 
+          {countdownTimeHr !== "" ? 
           <View style={styles.nextPrayer}>
-            <Text style={styles.nextPrayerText}>{upcomingPrayerName} IQAMAH</Text>
+            <Text style={styles.nextPrayerText}>NEXT ATHAN IN:</Text> 
             <Text style={styles.countDown}>
-              {countdownTimeHr}<Text style={styles.HRMN}>HR</Text> {countdownTimeMn}<Text style={styles.HRMN}>MIN</Text>
-              </Text>
+            {countdownTimeHr}<Text style={styles.HRMN}>HR</Text> {countdownTimeMn}<Text style={styles.HRMN}>MIN</Text>
+            </Text>
           </View>
+          :
+            <View  style={styles.nextPrayerNull}>
+              <Text> </Text>
+              </View>}
 
           <View style={styles.border2}></View>
 

@@ -272,6 +272,10 @@ export default StyleSheet.create({
         textAlign: 'center',
       },
 
+      nextPrayerNull: {
+        marginTop: 80
+      },
+
       nextPrayerText:{
         fontSize: 24,
         marginBottom: 10,

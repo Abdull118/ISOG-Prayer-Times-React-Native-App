@@ -8,15 +8,13 @@ const DigitalClock = () => {
   const formatTime = (date) => {
     let hours = date.getHours();
     let minutes = date.getMinutes();
-    let seconds = date.getSeconds();
     const amPm = hours >= 12 ? 'PM' : 'AM';
 
     hours = hours % 12;
     hours = hours < 10 ? '0' + hours : 12; // the hour '0' should be '12'
     minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
 
-    const strTime = `${hours}:${minutes}:${seconds}`;
+    const strTime = `${hours}:${minutes}`;
     return { strTime, amPm };
   };
 
@@ -25,19 +23,20 @@ const DigitalClock = () => {
     const { strTime, amPm } = formatTime(now);
     setCurrentTime(strTime);
     setAmPm(amPm);
-    requestAnimationFrame(tick);
+
+    // Schedule the next update
+    setTimeout(tick, 60000); // Update every minute
   };
 
   useEffect(() => {
-    const animationFrame = requestAnimationFrame(tick);
+    tick(); // Start the clock
 
-    return () => cancelAnimationFrame(animationFrame);
+    // No need for a cleanup function since setTimeout isn't repeating
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.clockText}>{currentTime}<Text style={styles.amPmText}>{amPm}</Text></Text>
-      
     </View>
   );
 };
@@ -45,15 +44,16 @@ const DigitalClock = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
     
   },
   clockText: {
     fontSize: 55,
     marginTop: 12,
-    marginLeft: 17,
+    marginLeft: 50,
     textAlign: 'center'
   },
   amPmText: {

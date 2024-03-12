@@ -285,7 +285,7 @@ export default StyleSheet.create({
 
       countDown:{
         fontSize: 40,
-        marginLeft: 15,
+        marginLeft: 3,
         textAlign: 'center',
       },
 

@@ -42,6 +42,7 @@ export default Home = ({navigation, route}) => {
   const [weatherText, setWeatherText] = useState()
 
   const [hadith, setHadith] = useState()
+  const [nextPrayer, setNextPrayer] = useState()
 
   const getHijriDate = async () => {
      try {
@@ -95,6 +96,27 @@ export default Home = ({navigation, route}) => {
       console.log(e)
     }
   }
+
+  const getNextPrayer = async () => {
+    try {
+        const response = await fetch('https://sparkling-jade-cowboy-boots.cyclic.app/nextPrayers', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add other headers if needed
+            },
+            body: JSON.stringify({
+                // Your PUT request payload (if necessary)
+                // Example: { key: 'value' }
+            })
+        });
+        const json = await response.json();
+        setNextPrayer(json.nextPrayer);
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 
   function convertTo12Hour(oldFormatTime) {
     var oldFormatTimeArray = oldFormatTime.split(":");
@@ -154,85 +176,6 @@ const [countdownTimeMn, setCountdownTimeMn] = useState("");
 const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
 
 
-  // State for dynamic styles for each prayer
-  const [prayerStyles, setPrayerStyles] = useState({
-    fajr: styles.defaultPrayer,
-    dhur: styles.defaultPrayer,
-    asr: styles.defaultPrayer,
-    maghrib: styles.defaultPrayer,
-    isha: styles.defaultPrayer,
-  });
-
-  // Function to update prayer styles
-  const updatePrayerStyles = () => {
-    const now = new Date();
-    const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes
-  
-    // Convert prayer times to minutes for comparison
-    const times = {
-      fajr: convertTimeToMinutes(fajrAthan),
-      dhur: convertTimeToMinutes(dhurAthan, true),
-      asr: convertTimeToMinutes(asrAthan, true),
-      maghrib: convertTimeToMinutes(maghribAthan, true),
-      isha: convertTimeToMinutes(ishaAthan, true),
-    };
-  
-  // Determine the next prayer
-  let nextPrayer = Object.keys(times).reduce((next, prayer) => {
-    if (times[prayer] > currentTime && (next === null || times[prayer] < times[next])) {
-      return prayer;
-    }
-    return next;
-  }, null);
-
-  // Handle the case when current time is past 'Isha' and before 'Fajr' of next day
-  if (nextPrayer === null) {
-    nextPrayer = 'fajr';
-    currentTime += 1440; // Add 24 hours to current time for comparison
-  }
-  
-    // Update the upcoming prayer name and countdown time
-    if (nextPrayer) {
-      const timeDifference = times[nextPrayer] - currentTime;
-      const hours = Math.floor(timeDifference / 60);
-      const minutes = timeDifference % 60;
-      const countdown = `${hours}`;
-      const countdownMinutes = `${minutes}`
-      setCountdownTimeHr(countdown);
-      setCountdownTimeMn(countdownMinutes)
-      setUpcomingPrayerName(nextPrayer);
-    } else {
-      setCountdownTimeHr("");
-      setCountdownTimeMn("")
-      setUpcomingPrayerName("");
-    }
-  
-    // Update the styles
-    const newStyles = { ...prayerStyles }; 
-    if (nextPrayer) {
-      newStyles[nextPrayer] = styles.upcomingPrayer;
-    }
-    setPrayerStyles(newStyles);
-  };
-
-  useEffect(() => {
-    if(fajrAthan && dhurAthan && asrAthan && maghribAthan && ishaAthan){
-      updatePrayerStyles();
-    const interval = setInterval(updatePrayerStyles, 60000);
-    return () => clearInterval(interval);
-    }
-    
-    
-  }, [fajrAthan, dhurAthan, asrAthan, maghribAthan, ishaAthan]);
-
-  // Convert 12-hour time format to total minutes for comparison
-  function convertTimeToMinutes(timeStr, isPM = false) {
-    let [hours, minutes] = timeStr.split(':').map(Number);
-    if (isPM && hours < 12) hours += 12;
-    return hours * 60 + minutes;
-  }
-
-
   useEffect(() => {
       getDate()
       getHijriDate()
@@ -253,12 +196,14 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
     getPrayerTimes()
     getAnnouncements()
     getHadiths()
+    getNextPrayer()
 
     setInterval(()=>{
       getAnnouncements()
       getPrayerTimes()
       getHadiths()
-    }, 3600000) 
+      getNextPrayer()
+    }, 1800000) 
  }, []);
 
 
@@ -320,34 +265,34 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
                   <Text style={styles.iqamah}>IQAMAH</Text>
                 </View>
 
-                <View style={[styles.prayers, prayerStyles.fajr]}>
-                  <Text style={[prayerStyles.fajr ? styles.prayerName1 : styles.prayerName]}>FAJR</Text>
-                  <Text style={[prayerStyles.fajr ? styles.athanTime1 : styles.athanTime]}>{fajrAthan}<Text style={styles.AMPM}>AM</Text></Text>
-                  <Text style={[prayerStyles.fajr ? styles.prayerTimer1 : styles.prayerTimer]}>{fajrPrayer}<Text style={styles.AMPM}>AM</Text></Text>
+                <View style={[styles.prayers, nextPrayer == 'fajr' ? styles.upcomingPrayer : null]}>
+                  <Text style={[nextPrayer == 'fajr' ? styles.prayerName1 : styles.prayerName]}>FAJR</Text>
+                  <Text style={[nextPrayer == 'fajr' ? styles.athanTime1 : styles.athanTime]}>{fajrAthan}<Text style={styles.AMPM}>AM</Text></Text>
+                  <Text style={[nextPrayer == 'fajr' ? styles.prayerTimer1 : styles.prayerTimer]}>{fajrPrayer}<Text style={styles.AMPM}>AM</Text></Text>
                 </View>
 
-                <View style={[styles.prayers, prayerStyles.dhur]}>
-                  <Text style={[prayerStyles.dhur ? styles.prayerName1 : styles.prayerName]}>DHUHR</Text>
-                  <Text style={[prayerStyles.dhur ? styles.athanTime1 : styles.athanTime]}>{dhurAthan}<Text style={styles.AMPM}>PM</Text></Text>
-                  <Text style={[prayerStyles.dhur ? styles.prayerTimer1 : styles.prayerTimer]}>{dhurPrayer}<Text style={styles.AMPM}>PM</Text></Text>
+                <View style={[styles.prayers, nextPrayer == 'dhuhr' ? styles.upcomingPrayer : null]}>
+                  <Text style={[nextPrayer == 'dhuhr' ? styles.prayerName1 : styles.prayerName]}>DHUHR</Text>
+                  <Text style={[nextPrayer == 'dhuhr' ? styles.athanTime1 : styles.athanTime]}>{dhurAthan}<Text style={styles.AMPM}>PM</Text></Text>
+                  <Text style={[nextPrayer == 'dhuhr' ? styles.prayerTimer1 : styles.prayerTimer]}>{dhurPrayer}<Text style={styles.AMPM}>PM</Text></Text>
                 </View>
 
-                <View style={[styles.prayers, prayerStyles.asr]}>
-                  <Text style={[prayerStyles.asr ? styles.prayerName1 : styles.prayerName]}>ASR</Text>
-                  <Text style={[prayerStyles.asr ? styles.athanTime1 : styles.athanTime]}>{asrAthan}<Text style={styles.AMPM}>PM</Text></Text>
-                  <Text style={[prayerStyles.asr ? styles.prayerTimer1 : styles.prayerTimer]}>{asrPrayer}<Text style={styles.AMPM}>PM</Text></Text>
+                <View style={[styles.prayers, nextPrayer == 'asr' ? styles.upcomingPrayer : null]}>
+                  <Text style={[nextPrayer == 'asr' ? styles.prayerName1 : styles.prayerName]}>ASR</Text>
+                  <Text style={[nextPrayer == 'asr' ? styles.athanTime1 : styles.athanTime]}>{asrAthan}<Text style={styles.AMPM}>PM</Text></Text>
+                  <Text style={[nextPrayer == 'asr' ? styles.prayerTimer1 : styles.prayerTimer]}>{asrPrayer}<Text style={styles.AMPM}>PM</Text></Text>
                 </View>
 
-                <View style={[styles.prayers, prayerStyles.maghrib]}>
-                  <Text style={[prayerStyles.maghrib ? styles.prayerName1 : styles.prayerName]}>MAGHRIB</Text>
-                  <Text style={[prayerStyles.maghrib ? styles.athanTime1 : styles.athanTime]}>{maghribAthan}<Text style={styles.AMPM}>PM</Text></Text>
-                  <Text style={[prayerStyles.maghrib ? styles.prayerTimer1 : styles.prayerTimer]}>{maghribAthan}<Text style={styles.AMPM}>PM</Text></Text>
+                <View style={[styles.prayers, nextPrayer == 'maghrib' ? styles.upcomingPrayer : null]}>
+                  <Text style={[nextPrayer == 'maghrib' ? styles.prayerName1 : styles.prayerName]}>MAGHRIB</Text>
+                  <Text style={[nextPrayer == 'maghrib' ? styles.athanTime1 : styles.athanTime]}>{maghribAthan}<Text style={styles.AMPM}>PM</Text></Text>
+                  <Text style={[nextPrayer == 'maghrib' ? styles.prayerTimer1 : styles.prayerTimer]}>{maghribAthan}<Text style={styles.AMPM}>PM</Text></Text>
                 </View>
 
-                <View style={[styles.prayers, prayerStyles.isha]}>
-                  <Text style={[prayerStyles.isha ? styles.prayerName1 : styles.prayerName]}>ISHA</Text>
-                  <Text style={[prayerStyles.isha ? styles.athanTime1 : styles.athanTime]}>{ishaAthan}<Text style={styles.AMPM}>PM</Text></Text>
-                  <Text style={[prayerStyles.isha ? styles.prayerTimer1 : styles.prayerTimer]}>{ishaPrayer}<Text style={styles.AMPM}>PM</Text></Text>
+                <View style={[styles.prayers, nextPrayer == 'isha' ? styles.upcomingPrayer : null]}>
+                  <Text style={[nextPrayer == 'isha' ? styles.prayerName1 : styles.prayerName]}>ISHA</Text>
+                  <Text style={[nextPrayer == 'isha' ? styles.athanTime1 : styles.athanTime]}>{ishaAthan}<Text style={styles.AMPM}>PM</Text></Text>
+                  <Text style={[nextPrayer == 'isha' ? styles.prayerTimer1 : styles.prayerTimer]}>{ishaPrayer}<Text style={styles.AMPM}>PM</Text></Text>
                 </View>
                 
 

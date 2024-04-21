@@ -8,6 +8,7 @@ import DigitalClock from './components/digitalClock';
 import styles from './styles';
 import sunHaze from './images/sunHaze.png'
 import moon from './images/moon.png'
+import { WebView } from 'react-native-webview';
 
 export default Home = ({navigation, route}) => {
 
@@ -208,10 +209,10 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
 
 
       if (!fontsLoaded) {
-      return null; // Or some other loading indicator
+      return null;
     } else {
       return<View style={styles.background}>
-      <View style={styles.layout}>
+      {/* <View style={styles.layout}>
         <View>
             <View>
 
@@ -234,7 +235,14 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
                 </View>
 
                 <View style={styles.announcementsContainer}>
-                  <Text style={styles.announcments}>{announcements}</Text>
+                  {announcements ? 
+                announcements.map((announcement, index) => (
+                    <Text key={index} style={styles.announcements1}>
+                      {announcement}
+                    </Text>
+                ))
+                : 
+                null}
                 </View>
               </View>
 
@@ -244,7 +252,7 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
                 </View>
 
                 <View style={styles.announcementsContainer}>
-                  <Text style={styles.announcments}>{hadith}</Text>
+                  <Text style={styles.announcements}>{hadith}</Text>
                 </View>
               </View>
             </View>
@@ -369,7 +377,9 @@ const [upcomingPrayerName, setUpcomingPrayerName] = useState("");
           </View>
         </View>
       
-      </View>
+      </View> */}
+      <WebView source={{ uri: 'https://isofg.ca' }} style={{ flex: 1 }} />
+
     </View>
     }
     

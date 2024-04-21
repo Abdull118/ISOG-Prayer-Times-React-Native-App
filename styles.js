@@ -85,13 +85,22 @@ export default StyleSheet.create({
         width: 325,
         height: 200,
         backgroundColor: "#00003E",
-        marginLeft: 5
+        marginLeft: 5,
+        display: 'flex',
+        alignItems: 'center',
+        color: 'white'
       },
     
-      announcments:{
+      announcements:{
         color: 'white',
         marginLeft: 8,
-        fontSize: 15
+        fontSize: 20
+      },
+
+      announcements1:{
+        color: 'white',
+        marginLeft: 8,
+        fontSize: 20
       },
     
       boxes:{
